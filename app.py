@@ -60,10 +60,15 @@ class Artist(db.Model):
     genres = db.Column(db.String(120))
     image_link = db.Column(db.String(500))
     facebook_link = db.Column(db.String(120))
+    genres = db.Column(db.ARRAY(db.String()))
+    seeking_venue = db.Column(db.Boolean)
+    seeking_description = db.Column(db.String())
+    shows = db.Column(db.ARRAY(db.TIMESTAMP(), db.String()))
+    website = db.Column(db.String(120))
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
-# TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
+# TODO: Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
 
 #----------------------------------------------------------------------------#
 # Filters.
@@ -93,7 +98,8 @@ def index():
 
 @app.route('/venues')
 def venues():
-  # TODO: replace with real venues data.
+  # TODO: Need to solve issue if there are cities with same name in different states.
+  #       Also in need of refactoring. Use clean code or refactoring.guru
   #       num_shows should be aggregated based on number of upcoming shows per venue.
   
   
@@ -116,7 +122,7 @@ def venues():
       "state": item.state,
       "venues": venue_list
     }
-      
+
     data.append(info)
 
   return render_template('pages/venues.html', areas=data);
