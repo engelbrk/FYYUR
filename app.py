@@ -63,12 +63,19 @@ class Artist(db.Model):
     genres = db.Column(db.ARRAY(db.String()))
     seeking_venue = db.Column(db.Boolean)
     seeking_description = db.Column(db.String())
-    shows = db.Column(db.ARRAY(db.TIMESTAMP(), db.String()))
     website = db.Column(db.String(120))
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
 # TODO: Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
+
+class Shows(db.Model):
+  __tablename__ = 'shows'
+
+  id = db.Column(db.Integer, primary_key=True)
+  artist_id = db.Column(db.Integer)
+  venue_id = db.Column(db.Integer)
+  start_time = db.Column(db.TIMESTAMP())
 
 #----------------------------------------------------------------------------#
 # Filters.
@@ -259,7 +266,7 @@ def delete_venue(venue_id):
 #  ----------------------------------------------------------------
 @app.route('/artists')
 def artists():
-  # TODO: replace with real data returned from querying the database
+  # TODO Done
   
   artists = Artist.query.all()
  
