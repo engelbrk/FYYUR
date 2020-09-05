@@ -44,6 +44,7 @@ class Venue(db.Model):
     facebook_link = db.Column(db.String(120))
     website = db.Column(db.String(120))
     seeking_talent = db.Column(db.Boolean)
+    seeking_description = db.Column(db.String())
     genres = db.Column(db.ARRAY(db.String()))
     shows = db.relationship('Shows', backref='venue', lazy=True, cascade='all')
 
@@ -359,20 +360,22 @@ def edit_artist_submission(artist_id):
 
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
 def edit_venue(venue_id):
-  form = VenueForm()
+  
+  form = VenueForm(request.form)
+  specific_venue = Venue.query.filter_by(id = venue_id).first()
   venue={
-    "id": 1,
-    "name": "The Musical Hop",
-    "genres": ["Jazz", "Reggae", "Swing", "Classical", "Folk"],
-    "address": "1015 Folsom Street",
-    "city": "San Francisco",
-    "state": "CA",
-    "phone": "123-123-1234",
-    "website": "https://www.themusicalhop.com",
-    "facebook_link": "https://www.facebook.com/TheMusicalHop",
-    "seeking_talent": True,
-    "seeking_description": "We are on the lookout for a local artist to play every two weeks. Please call us.",
-    "image_link": "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60"
+    "id": venue_id,
+    "name": specific_venue.name,
+    "genres": specific_venue.genres,
+    "address": specific_venue.address,
+    "city": specific_venue.city,
+    "state": specific_venue.state,
+    "phone": specific_venue.phone,
+    "website": specific_venue.website,
+    "facebook_link": specific_venue.facebook_link,
+    "seeking_talent": specific_venue.seeking_talent,
+    "seeking_description": specific_venue.seeking_description,
+    "image_link": specific_venue.image_link
   }
   # TODO: populate form with values from venue with ID <venue_id>
   return render_template('forms/edit_venue.html', form=form, venue=venue)
@@ -421,10 +424,6 @@ def create_artist_submission():
 
 @app.route('/shows')
 def shows():
-  # displays list of shows at /shows
-  # TODO: replace with real venues data.
-  #       num_shows should be aggregated based on number of upcoming shows per venue.
-  
   
   shows = Shows.query.all()
   print(shows)
